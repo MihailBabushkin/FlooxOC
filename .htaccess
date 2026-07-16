@@ -1,0 +1,29 @@
+# ============================================
+# Файл: /var/www/html/api/.htaccess
+# Назначение: Защита и настройка API
+# ============================================
+
+# Запрещаем просмотр директории
+Options -Indexes
+
+# Устанавливаем кодировку
+AddDefaultCharset UTF-8
+
+# Разрешаем только определённые методы
+<LimitExcept POST GET OPTIONS>
+    Order Allow,Deny
+    Deny from all
+</LimitExcept>
+
+# Защита от DDoS (ограничение запросов)
+<IfModule mod_ratelimit.c>
+    SetOutputFilter RATE_LIMIT
+    SetEnv rate-limit 100
+</IfModule>
+
+# Кеширование
+<FilesMatch "\.(json|xml)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+</FilesMatch>
